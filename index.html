@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="PAC-MAN">
+<meta name="apple-mobile-web-app-title" content="PAC-CAOS">
 <meta name="mobile-web-app-capable" content="yes">
-<title>PAC-MAN CHAOS</title>
+<title>PAC-CAOS</title>
 <meta name="theme-color" content="#000000">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
@@ -110,8 +110,9 @@ body.hastouch #dpBtn{display:inline-block}
 #CTRL{justify-content:center!important}
 body:not(.showdp):not(.keys) #CTRL{display:none}
 body.keys:not(.showdp) #CTRL{height:clamp(56px,10vh,80px)}
-#ABILBAR{display:flex;justify-content:center;align-items:flex-start;gap:clamp(6px,2vw,14px);padding:clamp(3px,.8vh,6px) 8px;flex-shrink:0;border-bottom:1px solid #111;background:#000}
-#ABILBAR .ABIL-BTN{width:clamp(36px,6.5vh,50px);height:clamp(36px,6.5vh,50px)}
+#ABILBAR{display:flex;justify-content:center;align-items:flex-start;gap:clamp(3px,1.2vw,12px);padding:clamp(3px,.8vh,6px) 6px;flex-shrink:0;border-bottom:1px solid #111;background:#000}
+#ABILBAR .ABIL-BTN{width:min(clamp(36px,6.5vh,50px),10.4vw);height:min(clamp(36px,6.5vh,50px),10.4vw)}
+#ABILBAR .ABIL-BTN span{color:#fff;font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;font-variant-emoji:emoji}
 #ABILBAR .ABIL-NAME{font-size:clamp(5px,1.1vh,7px)}
 .HB{cursor:pointer;font-size:clamp(13px,2.6vh,17px);padding:1px 7px;border:1px solid rgba(0,245,255,.3);border-radius:8px;margin-left:6px;user-select:none;line-height:1.4}
 .HB:active{background:rgba(0,245,255,.2)}
@@ -124,8 +125,8 @@ body.keys:not(.showdp) #CTRL{height:clamp(56px,10vh,80px)}
 <!-- TITLE -->
 <div class="SCR ON" id="ST">
   <div class="PAC-A">😮</div>
-  <div class="LOGO">PAC-MAN</div>
-  <div class="SUB">CHAOS EDITION · MULTIPLAYER</div>
+  <div class="LOGO">PAC-CAOS</div>
+  <div class="SUB">EDICIÓN CAOS · MULTIJUGADOR</div>
   <button class="B BY" onclick="go('SM')">▶ JUGAR</button>
   <button class="B BC" onclick="go('SH')">? CÓMO JUGAR</button>
 </div>
@@ -134,12 +135,12 @@ body.keys:not(.showdp) #CTRL{height:clamp(56px,10vh,80px)}
 <div class="SCR" id="SH">
   <div class="STIT">CÓMO JUGAR</div>
   <div class="IB" style="text-align:left;line-height:2.4;max-width:360px">
-    😮 <b>PAC-MAN</b> — Come puntos y huye<br>
-    👻 <b>FANTASMA</b> — Atrapa a Pac-Man<br>
+    😮 <b>PAC-CAOS</b> — Come puntos y huye<br>
+    👻 <b>FANTASMA</b> — Atrapa a Pac-Caos<br>
     ⚡ <b>POWER PELLET</b> — Fantasmas asustados<br><br>
-    <b style="color:#ffe000">⚡ PODERES (3 por jugador, cooldown)</b><br>
-    😮 <b>Pac-Man:</b> Bomba·Dash·Trampa<br>
-    👻 <b>Fantasma:</b> Láser·Teleport·Trampa<br><br>
+    <b style="color:#ffe000">⚡ PODERES (cooldown): Pac-Caos 8 · Fantasma 5</b><br>
+    😮 <b>Pac-Caos:</b> Bomba·Dash·Trampa·Escudo·Congelar·Gigante·Clones·Láser<br>
+    👻 <b>Fantasma:</b> Láser·Teleport·Trampa·Turbo·Onda<br><br>
     🏠 Anfitrión: crea sala, comparte código<br>
     📱 Cliente: ingresa el código
   </div>
@@ -152,6 +153,7 @@ body.keys:not(.showdp) #CTRL{height:clamp(56px,10vh,80px)}
   <button class="B BY" onclick="go('SHOST')">🏠 CREAR SALA</button>
   <button class="B BC" onclick="go('SJOIN');refreshRooms()">📡 UNIRSE A SALA</button>
   <button class="B BD" onclick="startSolo()">👤 UN JUGADOR</button>
+  <button class="B BP" id="btnLvl" style="font-size:9px;padding:9px" onclick="resetLevel()">NIVEL 1</button>
   <button class="B BP" onclick="go('ST')">← VOLVER</button>
 </div>
 
@@ -190,17 +192,17 @@ body.keys:not(.showdp) #CTRL{height:clamp(56px,10vh,80px)}
 <!-- ROLE SELECT -->
 <div class="SCR" id="SROLE">
   <div class="STIT">ELIGE TU ROL</div>
-  <div class="IB" id="roleHint" style="font-size:clamp(7px,1.8vw,9px);line-height:2">Multijugador: máx <b>2 PAC-MAN</b> · máx <b>8 FANTASMAS</b></div>
+  <div class="IB" id="roleHint" style="font-size:clamp(7px,1.8vw,9px);line-height:2">Multijugador: máx <b>2 PAC-CAOS</b> · máx <b>8 FANTASMAS</b></div>
   <div class="RG">
     <div class="RC RCP" onclick="pickRole('pacman')" id="rcP">
       <div class="RI">😮</div>
-      <div class="RN" style="color:#ffe000">PAC-MAN</div>
-      <div class="RD">Come puntos · 3 poderes de ataque y escape</div>
+      <div class="RN" style="color:#ffe000">PAC-CAOS</div>
+      <div class="RD">Come puntos · 8 poderes de ataque y escape</div>
     </div>
     <div class="RC RCG" onclick="pickRole('ghost')" id="rcG">
       <div class="RI">👻</div>
       <div class="RN" style="color:#ff2d78">FANTASMA</div>
-      <div class="RD">Atrapa Pac-Man · 3 poderes de caza</div>
+      <div class="RD">Atrapa Pac-Caos · 5 poderes de caza</div>
     </div>
   </div>
   <div class="IB" id="roleInfo" style="display:none"></div>
@@ -248,7 +250,7 @@ body.keys:not(.showdp) #CTRL{height:clamp(56px,10vh,80px)}
     </div>
     <div id="KEYS">
       <span><span class="kc">←</span><span class="kc">↑</span><span class="kc">↓</span><span class="kc">→</span> o <span class="kc">W</span><span class="kc">A</span><span class="kc">S</span><span class="kc">D</span> MOVER</span>
-      <span><span class="kc">1</span>…<span class="kc">5</span> PODERES</span>
+      <span><span class="kc">1</span>…<span class="kc">8</span> PODERES</span>
       <span><span class="kc">P</span> PAUSA · <span class="kc">M</span> SONIDO</span>
     </div>
   </div>
@@ -287,16 +289,19 @@ function ovOK(){hideOv();if(_ovCB)_ovCB();}
 const PAC_ABILS=[
   {id:'bomb',   icon:'💣', name:'BOMBA',    cd:360, desc:'Explota en cruz, asusta fantasmas cercanos'},
   {id:'dash',   icon:'⚡', name:'DASH',     cd:240, desc:'Velocidad x3 por 2 segundos'},
-  {id:'trap',   icon:'🕳', name:'TRAMPA',   cd:480, desc:'Deja trampa que frena fantasmas'},
-  {id:'shield', icon:'🛡', name:'ESCUDO',   cd:720, desc:'Invulnerable 4 segundos'},
-  {id:'freeze', icon:'❄', name:'CONGELAR', cd:900, desc:'Congela a todos los fantasmas 3 segundos'},
+  {id:'trap',   icon:'🕳️', name:'TRAMPA',   cd:480, desc:'Deja trampa que frena fantasmas'},
+  {id:'shield', icon:'🛡️', name:'ESCUDO',   cd:720, desc:'Invulnerable 4 segundos'},
+  {id:'freeze', icon:'❄️', name:'CONGELAR', cd:900, desc:'Congela a todos los fantasmas 3 segundos'},
+  {id:'giant',  icon:'🍄', name:'GIGANTE',  cd:1200,desc:'Gigante 5 segundos: devora fantasmas'},
+  {id:'clones', icon:'👥', name:'CLONES',   cd:1500,desc:'2 clones controlados por IA durante 8 segundos'},
+  {id:'laser',  icon:'🔫', name:'LÁSER',    cd:420, desc:'Dispara y manda a casa al fantasma alcanzado'},
 ];
 const GHOST_ABILS=[
   {id:'laser',  icon:'🔫', name:'LÁSER',    cd:300, desc:'Dispara en línea recta'},
-  {id:'tele',   icon:'🌀', name:'TELETRANS',cd:420, desc:'Teletransporta al fantasma cerca de Pac-Man'},
-  {id:'trap',   icon:'🕸', name:'TRAMPA',   cd:480, desc:'Deja telaraña que frena a Pac-Man'},
+  {id:'tele',   icon:'🌀', name:'TELETRANS',cd:420, desc:'Teletransporta al fantasma cerca de Pac-Caos'},
+  {id:'trap',   icon:'🕸️', name:'TRAMPA',   cd:480, desc:'Deja telaraña que frena a Pac-Caos'},
   {id:'boost',  icon:'💨', name:'TURBO',    cd:600, desc:'Velocidad x1.8 por 2.5 segundos'},
-  {id:'shock',  icon:'💥', name:'ONDA',     cd:660, desc:'Aturde a Pac-Man cercano 1.5 segundos'},
+  {id:'shock',  icon:'💥', name:'ONDA',     cd:660, desc:'Aturde a Pac-Caos cercano 1.5 segundos'},
 ];
 
 // ═══════════════════════════════════════════════════════════════
@@ -629,6 +634,8 @@ const SFX = (()=>{
     shield:()=>{ beep('sine',520,0.35,0.16,0.01,0.05,0.8,0.2,1040); },
     freeze:()=>{ beep('triangle',1400,0.5,0.14,0.005,0.05,0.7,0.3,300); },
     boost:()=>{ beep('sawtooth',200,0.25,0.14,0.005,0.03,0.7,0.12,900); },
+    giant:()=>{ beep('sawtooth',90,0.5,0.2,0.01,0.05,0.8,0.25,260); },
+    clones:()=>{ beep('sine',500,0.12,0.15); setTimeout(()=>beep('sine',650,0.12,0.15),110); setTimeout(()=>beep('sine',800,0.16,0.15),220); },
     shock:()=>{ beep('square',90,0.3,0.2,0.002,0.02,0.8,0.15,40); },
     dash:()=>{ beep('square',440,0.05,0.15,0.002,0.01,0.5,0.04,880); },
     trap:()=>{ beep('triangle',200,0.12,0.15,0.005,0.08,0.3,0.06,150); },
@@ -670,16 +677,30 @@ function mkPac(idx){
   const sp=idx===0?PAC_START:PAC_START2;
   return{
     idx,px:sp.c,py:sp.r,dc:0,dr:0,wdc:idx===0?1:-1,wdr:0,
-    speed:0.12,mouth:0.05,mdir:1,dead:false,isAI:false,playerId:null,
+    speed:0.105,mouth:0.05,mdir:1,dead:false,isAI:false,playerId:null,
     abils:mkAbils(PAC_ABILS),
-    dashTimer:0,slowTimer:0,stunTimer:0,shieldTimer:0,boostTimer:0 // slowTimer: when >0 pacman is slowed by trap
+    dashTimer:0,slowTimer:0,stunTimer:0,shieldTimer:0,boostTimer:0,giantTimer:0,clone:false,cloneTimer:0 // slowTimer: when >0 pacman is slowed by trap
   };
 }
+// ── DIFICULTAD PROGRESIVA: arranca fácil (niños) y sube suave con cada partida ganada ──
+function getWins(){try{return Math.max(0,parseInt(localStorage.getItem('pac_wins')||'0',10)||0);}catch(e){return 0;}}
+function addWin(){try{localStorage.setItem('pac_wins',String(getWins()+1));}catch(e){}updLvlBtn();}
+function resetLevel(){try{localStorage.setItem('pac_wins','0');}catch(e){}updLvlBtn();toast('Dificultad reiniciada: NIVEL 1',1400);}
+function updLvlBtn(){const b=$('btnLvl');if(b)b.textContent='NIVEL '+(getWins()+1)+' · REINICIAR DIFICULTAD';}
+function diffT(level){return Math.min(Math.max(level-1,0),10)/10;}          // 0 (fácil) … 1 (normal)
+function ghostBaseSpeed(level){return 0.056+0.030*diffT(level);}           // 0.056 … 0.086
+function ghostsActive(level){return 2+Math.min(2,Math.floor((level-1)/3));} // fantasmas IA: 2,3,4
+function startLives(level){return 5-Math.min(2,Math.floor((level-1)/3));}  // vidas: 5,4,3
+function frightTime(level){return Math.round(480-180*diffT(level));}        // fantasmas asustados más tiempo al inicio
+function wanderChance(level){return 0.45-0.40*diffT(level);}               // IA al inicio se "despista" más
+function ghostExitTimer(g,i){return !g.isAI?i*60+30:(i<ghostsActive(G.level)?i*120+60:1e9);}
+function applyGhostSchedule(){G.ghosts.forEach((g,i)=>{g.exitTimer=ghostExitTimer(g,i);});}
+
 function mkG(idx){
   const sp=G_START[Math.min(idx,G_START.length-1)];
   return{
     idx,px:sp.c,py:sp.r,dc:0,dr:0,wdc:0,wdr:0,
-    colorIdx:idx%G_COLORS.length,speed:0.09,
+    colorIdx:idx%G_COLORS.length,speed:0.07,
     frightened:false,eaten:false,inHouse:true,
     exitTimer:idx*90,blinkTick:0,
     isAI:true,playerId:null,
@@ -695,7 +716,7 @@ function initG(){
   const tot=countDots(map);
   G={
     map,tot,dotsLeft:tot,
-    score:0,lives:3,level:1,tick:0,
+    score:0,lives:startLives(getWins()+1),level:getWins()+1,tick:0,
     powerTimer:0,fruitActive:false,fruitCountdown:0,
     running:false,over:false,
     pacs:[mkPac(0),mkPac(1)],
@@ -705,6 +726,7 @@ function initG(){
     lasers:[],   // [{px,py,dc,dr,len,timer,ownerId}]
     effects:[]   // visual only FX list [{type,px,py,timer}]
   };
+  applyGhostSchedule();
   wantDC=0;wantDR=0;
 }
 
@@ -820,6 +842,25 @@ function execAbil(ownerId,abilId){
     } else if(abilId==='shield'){
       owner.shieldTimer=240;
       SFX.shield(); toast('🛡 ESCUDO!',700);
+    } else if(abilId==='giant'){
+      owner.giantTimer=300;
+      SFX.giant(); toast('🍄 ¡GIGANTE!',800);
+    } else if(abilId==='clones'){
+      G.pacs=G.pacs.filter(p=>!p.clone);
+      for(let k=0;k<2;k++){
+        const c=mkPac(2+k);
+        c.px=Math.round(owner.px);c.py=Math.round(owner.py);
+        c.isAI=true;c.clone=true;c.cloneTimer=480;c.speed=owner.speed;c.wdc=k?-1:1;c.wdr=0;
+        G.pacs.push(c);
+      }
+      G.effects.push({type:'tele',px:owner.px,py:owner.py,timer:30});
+      SFX.clones(); toast('👥 ¡CLONES!',800);
+    } else if(abilId==='laser'){
+      let dc=owner.dc,dr=owner.dr;
+      if(!dc&&!dr){dc=owner.wdc;dr=owner.wdr;}
+      if(!dc&&!dr)dc=1;
+      G.lasers.push({px:owner.px,py:owner.py,dc,dr,len:0,maxLen:9,timer:50,ownerId,own:'pac'});
+      SFX.laser(); toast('🔫 ¡LÁSER!',700);
     } else if(abilId==='freeze'){
       G.ghosts.forEach(g=>{if(!g.eaten)g.stunTimer=180;});
       G.effects.push({type:'freeze',px:owner.px,py:owner.py,timer:40});
@@ -907,7 +948,7 @@ function eatDot(p){
 }
 
 function eatPower(){
-  G.powerTimer=360;
+  G.powerTimer=frightTime(G.level);
   G.ghosts.forEach(g=>{if(!g.inHouse&&!g.eaten){g.frightened=true;g.blinkTick=0;}});
   SFX.power(); toast('⚡ PODER!',900);
 }
@@ -939,6 +980,7 @@ function moveGhosts(){
     if(g.isAI){aiGhost(g,i);}
     else{
       if(g.playerId===myId){g.wdc=wantDC;g.wdr=wantDR;}
+      g.speed=g.frightened?ghostBaseSpeed(G.level)*0.6:ghostBaseSpeed(G.level);
       moveEntity(g);
     }
     if(g.frightened)g.blinkTick++;
@@ -946,7 +988,8 @@ function moveGhosts(){
 }
 
 function aiGhost(g,idx){
-  g.speed=g.frightened?0.054:0.090+(idx%2)*0.01;
+  const gb=ghostBaseSpeed(G.level);
+  g.speed=g.frightened?gb*0.6:gb+(idx%2)*0.006;
 
   // Only recalculate direction when aligned to a grid intersection
   if(aligned(g.px)&&aligned(g.py)){
@@ -978,9 +1021,12 @@ function aiGhost(g,idx){
     } else {
       // Chase / scatter logic per ghost index
       let tc=Math.round(target.px), tr2=Math.round(target.py);
-      if(idx===1){tc+=target.dc*4;tr2+=target.dr*4;} // Pinky: ambush ahead
-      if(idx===3&&G.tick%300<150){tc=1;tr2=ROWS-2;}   // Clyde: scatter corner
+      if(idx===1){tc+=target.dc*4;tr2+=target.dr*4;} // emboscada: apunta delante
+      if(idx===3&&G.tick%300<150){tc=1;tr2=ROWS-2;}   // se dispersa a una esquina
 
+      const key=gc+','+gr;
+      if(g._tile!==key){g._tile=key;g._pick=(!g.frightened&&Math.random()<wanderChance(G.level))?valid[Math.floor(Math.random()*valid.length)]:null;}
+      if(g._pick&&valid.some(d=>d.dc===g._pick.dc&&d.dr===g._pick.dr)){g.dc=g._pick.dc;g.dr=g._pick.dr;g.wdc=g.dc;g.wdr=g.dr;moveEntity(g);return;}
       const best=valid.reduce((a,d)=>{
         const da=(gc+d.dc-tc)**2+(gr+d.dr-tr2)**2;
         const db=(gc+a.dc-tc)**2+(gr+a.dr-tr2)**2;
@@ -1003,7 +1049,9 @@ function updateAbilCDs(){
   [...G.pacs,...G.ghosts].forEach(e=>{
     e.abils.forEach(a=>{if(a.cooldown>0)a.cooldown--;});
     if(e.shieldTimer>0)e.shieldTimer--;
+    if(e.giantTimer>0)e.giantTimer--;
   });
+  G.pacs=G.pacs.filter(p=>{if(p.clone){p.cloneTimer--;return p.cloneTimer>0;}return true;});
 }
 function updateTraps(){
   G.traps=G.traps.filter(t=>{
@@ -1027,6 +1075,19 @@ function updateLasers(){
   G.lasers=G.lasers.filter(l=>{
     l.timer--;l.len=Math.min(l.len+0.6,l.maxLen);
     if(l.timer<=0)return false;
+    if(l.own==='pac'){
+      G.ghosts.forEach(g=>{
+        if(g.inHouse||g.eaten||l.timer<=0)return;
+        for(let i=0;i<=Math.floor(l.len);i++){
+          const lc=Math.round(l.px+l.dc*i),lr=Math.round(l.py+l.dr*i);
+          if(Math.abs(g.px-lc)<0.7&&Math.abs(g.py-lr)<0.7){
+            g.eaten=true;g.frightened=false;G.score+=200;
+            G.effects.push({type:'eat',px:g.px,py:g.py,timer:30});SFX.eatGhost();l.timer=0;break;
+          }
+        }
+      });
+      return l.timer>0;
+    }
     // Hit check on pacs
     G.pacs.forEach(p=>{
       if(!p.dead){
@@ -1044,11 +1105,25 @@ function updateLasers(){
 function updateEffects(){G.effects=G.effects.filter(e=>{e.timer--;return e.timer>0;});}
 
 function hitPac(p){
-  if(p.dead||p.shieldTimer>0)return;
+  if(p.clone){p.cloneTimer=0;return;}
+  if(p.dead||p.shieldTimer>0||p.giantTimer>0)return;
   p.dead=true;G.lives--;SFX.die();
   const g0=G;
   if(G.lives<=0){setTimeout(()=>{if(G===g0)endGame(false);},1200);}
-  else{toast('💀 VIDA PERDIDA',1000);setTimeout(()=>{if(G!==g0||G.over)return;resetPos();p.dead=false;},1400);}
+  else{
+    toast('💀 VIDA PERDIDA',1000);
+    // Solo reaparece quien perdió la vida; el resto del escenario (fantasmas, puntos, otro jugador) sigue igual
+    setTimeout(()=>{if(G!==g0||G.over||!G.pacs.includes(p))return;respawnPac(p);},1400);
+  }
+}
+
+function respawnPac(p){
+  const sp=p.idx===0?PAC_START:PAC_START2;
+  p.px=sp.c;p.py=sp.r;p.dc=0;p.dr=0;p.wdc=p.idx===0?1:-1;p.wdr=0;
+  p.dashTimer=0;p.slowTimer=0;p.stunTimer=0;p.boostTimer=0;p.giantTimer=0;
+  p.shieldTimer=180; // 3 s de escudo para que no lo atrapen al reaparecer
+  p.dead=false;
+  G.effects.push({type:'tele',px:p.px,py:p.py,timer:30});
 }
 
 function checkCol(){
@@ -1056,8 +1131,8 @@ function checkCol(){
     if(p.dead)return;
     G.ghosts.forEach(g=>{
       if(g.inHouse||g.eaten)return;
-      if(Math.hypot(p.px-g.px,p.py-g.py)<0.72){
-        if(g.frightened){g.eaten=true;g.frightened=false;G.score+=200;G.effects.push({type:'eat',px:g.px,py:g.py,timer:30});SFX.eatGhost();toast('NOM +200',800);}
+      if(Math.hypot(p.px-g.px,p.py-g.py)<(p.giantTimer>0?1.5:0.72)){
+        if(g.frightened||p.giantTimer>0){g.eaten=true;g.frightened=false;G.score+=200;G.effects.push({type:'eat',px:g.px,py:g.py,timer:30});SFX.eatGhost();toast('NOM +200',800);}
         else if(g.stunTimer>0){/* congelado: inofensivo */}
         else hitPac(p);
       }
@@ -1066,18 +1141,19 @@ function checkCol(){
 }
 
 function resetPos(){
+  G.pacs=G.pacs.filter(p=>!p.clone);
   // Reset pac(s)
   G.pacs.forEach((p,i)=>{
     if(isSolo&&i>0)return; // solo: only reset pac 0
     const sp=i===0?PAC_START:PAC_START2;
     p.px=sp.c;p.py=sp.r;p.dc=0;p.dr=0;p.wdc=i===0?1:-1;p.wdr=0;
-    p.dashTimer=0;p.slowTimer=0;p.stunTimer=0;p.shieldTimer=0;p.boostTimer=0;
+    p.dashTimer=0;p.slowTimer=0;p.stunTimer=0;p.shieldTimer=0;p.boostTimer=0;p.giantTimer=0;
   });
   // Reset all ghosts to house
   G.ghosts.forEach((g,i)=>{
     const sp=G_START[Math.min(i,G_START.length-1)];
     g.px=sp.c;g.py=sp.r;g.dc=0;g.dr=0;
-    g.inHouse=true;g.exitTimer=i*90;
+    g.inHouse=true;g.exitTimer=ghostExitTimer(g,i);
     g.frightened=false;g.eaten=false;g.slowTimer=0;g.stunTimer=0;g.shieldTimer=0;g.boostTimer=0;
   });
   G.traps=[];G.lasers=[];G.effects=[];
@@ -1091,10 +1167,11 @@ function endGame(pacWins){
   if(!G||G.over)return;
   G.running=false;G.over=true;
   stopSiren();
+  if(pacWins&&(isSolo||amHost))addWin();
   if(pacWins)SFX.win();else SFX.gameOver();
-  if(amHost&&!isSolo)NET.bcast({type:'gameover',pacWins,score:G.score});
-  const title=pacWins?'😮 PAC-MAN GANA!':'👻 FANTASMAS GANAN!';
-  const sub=`Puntuación: ${G.score}<br><br>¿Otra partida?`;
+  if(amHost&&!isSolo)NET.bcast({type:'gameover',pacWins,score:G.score,next:getWins()+1});
+  const title=pacWins?'😮 PAC-CAOS GANA!':'👻 FANTASMAS GANAN!';
+  const sub=`Puntuación: ${G.score}<br>`+(pacWins?`<br>⭐ ¡Subes al NIVEL ${getWins()+1}!`:`<br>Se repite el NIVEL ${getWins()+1}`)+`<br><br>¿Otra partida?`;
   showOv(title,sub,'REVANCHA',()=>{hideOv();restartGame();});
 }
 
@@ -1230,7 +1307,8 @@ function drawLasers(){
   const ts=TS;
   G.lasers.forEach(l=>{
     const alpha=l.timer/60;
-    CTX.strokeStyle=`rgba(255,60,60,${alpha})`;CTX.lineWidth=ts*0.25;CTX.shadowColor='#ff3333';CTX.shadowBlur=ts*0.6;
+    const pl=l.own==='pac';
+    CTX.strokeStyle=pl?`rgba(0,245,255,${alpha})`:`rgba(255,60,60,${alpha})`;CTX.lineWidth=ts*0.25;CTX.shadowColor=pl?'#00f5ff':'#ff3333';CTX.shadowBlur=ts*0.6;
     CTX.beginPath();
     CTX.moveTo(l.px*ts+ts/2,l.py*ts+ts/2);
     CTX.lineTo((l.px+l.dc*l.len)*ts+ts/2,(l.py+l.dr*l.len)*ts+ts/2);
@@ -1241,8 +1319,10 @@ function drawLasers(){
 function drawPacs(){
   G.pacs.forEach((p,pi)=>{
     if(p.dead&&Math.floor(G.tick/5)%2)return;
-    const cx=p.px*TS+TS/2,cy=p.py*TS+TS/2,r=TS*0.44;
+    const gm=p.giantTimer>0?((p.giantTimer<50&&Math.floor(p.giantTimer/5)%2)?1.5:2.1):1;
+    const cx=p.px*TS+TS/2,cy=p.py*TS+TS/2,r=TS*0.44*gm;
     const colors=['#FFE000','#FF9900'];
+    if(p.clone){colors[0]=colors[1]='#7CFFEA';CTX.globalAlpha=0.75;}
     CTX.save();CTX.translate(cx,cy);
     let ang=0;
     if(p.dc===1)ang=0;else if(p.dc===-1)ang=Math.PI;
@@ -1472,6 +1552,7 @@ const _mq=q=>{try{return window.matchMedia&&matchMedia(q).matches;}catch(e){retu
 // Táctil puro → deslizar. Con ratón/teclado (PC, portátil) → flechas/WASD. Híbridos aceptan ambos.
 const INPUT_MODE=(HAS_TOUCH&&(_mq('(pointer:coarse)')||!_mq('(any-pointer:fine)')))?'touch':'keys';
 
+const ROLE_LBL={pacman:'PAC-CAOS',ghost:'FANTASMA'};
 function myEnt(){
   if(!G)return null;
   if(myRole==='pacman')return G.pacs.find(p=>p.playerId===myId||(isSolo&&p.idx===0))||null;
@@ -1535,7 +1616,7 @@ function setupInput(){
 }
 
 const KDIR={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]};
-const KABIL={Digit1:0,Numpad1:0,Digit2:1,Numpad2:1,Digit3:2,Numpad3:2,Digit4:3,Numpad4:3,Digit5:4,Numpad5:4};
+const KABIL={Digit1:0,Numpad1:0,Digit2:1,Numpad2:1,Digit3:2,Numpad3:2,Digit4:3,Numpad4:3,Digit5:4,Numpad5:4,Digit6:5,Numpad6:5,Digit7:6,Numpad7:6,Digit8:7,Numpad8:7};
 window.addEventListener('keydown',e=>{
   const t=e.target;
   if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
@@ -1590,7 +1671,7 @@ function startSolo(){
   G.pacs[0].isAI=false;G.pacs[0].playerId='solo';
   // Single player: disable second pac entirely
   G.pacs[1].dead=true;G.pacs[1].isAI=true;G.pacs[1].px=-5;G.pacs[1].py=-5;
-  $('rTag').textContent='PAC-MAN';
+  $('rTag').textContent='PAC-CAOS';
   launchGame();
 }
 
@@ -1639,7 +1720,7 @@ function hostMsg(d,conn){
       if(!me||G)break;
       if(d.role!=='pacman'&&d.role!=='ghost')break;
       const others=Object.values(lobbyP).filter(p=>p.id!==pid);
-      if(d.role==='pacman'&&others.filter(p=>p.role==='pacman').length>=2){NET.send(conn,{type:'role_err',msg:'Solo 2 Pac-Man máx'});break;}
+      if(d.role==='pacman'&&others.filter(p=>p.role==='pacman').length>=2){NET.send(conn,{type:'role_err',msg:'Solo 2 Pac-Caos máx'});break;}
       if(d.role==='ghost'&&others.filter(p=>p.role==='ghost').length>=8){NET.send(conn,{type:'role_err',msg:'Solo 8 fantasmas máx'});break;}
       me.role=d.role;
       broadcastLobby();updateLobbyUI();break;}
@@ -1677,7 +1758,7 @@ function updateLobbyUI(){
     const el=document.createElement('div');el.className='PR';
     el.innerHTML=`<div class="PA" style="background:${p.color}22;border:1.5px solid ${p.color}">${p.role==='pacman'?'😮':p.role==='ghost'?'👻':'⏳'}</div>
     <div class="PN" style="color:${p.color}">${p.name}</div>
-    <span class="BADGE" style="color:${p.role==='pacman'?'#ffe000':p.role==='ghost'?'#ff2d78':'#444'}">${p.role||'...'}</span>`;
+    <span class="BADGE" style="color:${p.role==='pacman'?'#ffe000':p.role==='ghost'?'#ff2d78':'#444'}">${ROLE_LBL[p.role]||'...'}</span>`;
     list.appendChild(el);
   });
   const allReady=Object.values(lobbyP).every(p=>p.role)&&Object.keys(lobbyP).length>0;
@@ -1690,7 +1771,7 @@ function updateLobbyUI(){
 function hostLaunch(){
   initG();assignRoles();
   NET.bcast({type:'game_start',players:safeLobby(),state:packSt(true)});
-  $('rTag').textContent=myRole.toUpperCase();
+  $('rTag').textContent=ROLE_LBL[myRole]||'';
   launchGame();
 }
 
@@ -1698,7 +1779,7 @@ function assignRoles(){
   const pacs=Object.values(lobbyP).filter(p=>p.role==='pacman');
   const gsts=Object.values(lobbyP).filter(p=>p.role==='ghost');
   const me=lobbyP[myId];myRole=me?me.role||'ghost':'ghost';
-  // Assign Pac-Man entities (max 2)
+  // Assign Pac-Caos entities (max 2)
   G.pacs.forEach((p,i)=>{
     if(pacs[i]){p.isAI=false;p.playerId=pacs[i].id;}
     else{p.isAI=true;p.playerId=null;}
@@ -1709,6 +1790,7 @@ function assignRoles(){
     if(gsts[i]){g.isAI=false;g.playerId=gsts[i].id;}
     else{g.isAI=true;g.playerId=null;}
   });
+  applyGhostSchedule();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1753,7 +1835,7 @@ function clientMsg(d,conn){
     case'role_err':toast('⚠ '+d.msg,2000);go('SROLE');break;
     case'game_start':
       lobbyP=d.players||{};initG();unpackSt(d.state);assignClientRoles();
-      $('rTag').textContent=myRole.toUpperCase();launchGame();break;
+      $('rTag').textContent=ROLE_LBL[myRole]||'';launchGame();break;
     case'st':if(G&&!G.over)unpackSt(d.s);break;
     case'pause':
       if(!G||G.over)break;
@@ -1768,7 +1850,7 @@ function clientMsg(d,conn){
       if(G){G.running=false;G.over=true;}
       stopSiren();
       if(d.pacWins)SFX.win();else SFX.gameOver();
-      showOv(d.pacWins?'😮 PAC-MAN GANA!':'👻 FANTASMAS GANAN!',`Puntuación: ${d.score}<br><br>Esperando revancha del anfitrión...`,`OK`,()=>{hideOv();go('SLOBBY');});break;
+      showOv(d.pacWins?'😮 PAC-CAOS GANA!':'👻 FANTASMAS GANAN!',`Puntuación: ${d.score}<br>`+(d.pacWins?`<br>⭐ ¡Siguiente: NIVEL ${d.next||''}!`:'')+`<br><br>Esperando revancha del anfitrión...`,`OK`,()=>{hideOv();go('SLOBBY');});break;
   }
 }
 
@@ -1793,7 +1875,7 @@ function packSt(full){
     score:G.score,lives:G.lives,level:G.level,tick:G.tick,
     powerTimer:G.powerTimer,dotsLeft:G.dotsLeft,fruitActive:G.fruitActive,
     map:sendMap?mapStr():undefined,
-    pacs:G.pacs.map(p=>({idx:p.idx,px:r3(p.px),py:r3(p.py),dc:p.dc,dr:p.dr,mouth:r3(p.mouth),mdir:p.mdir,dead:p.dead,dashTimer:p.dashTimer,slowTimer:p.slowTimer,stunTimer:p.stunTimer,shieldTimer:p.shieldTimer,playerId:p.playerId,isAI:p.isAI,abils:ab(p)})),
+    pacs:G.pacs.map(p=>({idx:p.idx,px:r3(p.px),py:r3(p.py),dc:p.dc,dr:p.dr,mouth:r3(p.mouth),mdir:p.mdir,dead:p.dead,dashTimer:p.dashTimer,slowTimer:p.slowTimer,stunTimer:p.stunTimer,shieldTimer:p.shieldTimer,giantTimer:p.giantTimer,clone:p.clone,cloneTimer:p.cloneTimer,playerId:p.playerId,isAI:p.isAI,abils:ab(p)})),
     ghosts:G.ghosts.map(g=>({idx:g.idx,px:r3(g.px),py:r3(g.py),dc:g.dc,dr:g.dr,frightened:g.frightened,eaten:g.eaten,inHouse:g.inHouse,exitTimer:g.exitTimer,blinkTick:g.blinkTick,colorIdx:g.colorIdx,isAI:g.isAI,playerId:g.playerId,slowTimer:g.slowTimer,stunTimer:g.stunTimer,boostTimer:g.boostTimer,abils:ab(g)})),
     traps:G.traps,lasers:G.lasers.map(l=>({...l})),
   };
@@ -1826,7 +1908,9 @@ function unpackSt(s){
     G.map=m;
   }
   G.traps=s.traps||[];G.lasers=s.lasers||[];
-  s.pacs.forEach((sp,i)=>{if(G.pacs[i])applyEnt(G.pacs[i],sp);});
+  while(G.pacs.length<s.pacs.length)G.pacs.push(mkPac(G.pacs.length));
+  G.pacs.length=s.pacs.length;
+  s.pacs.forEach((sp,i)=>applyEnt(G.pacs[i],sp));
   s.ghosts.forEach((sg,i)=>{while(G.ghosts.length<=i)G.ghosts.push(mkG(i));applyEnt(G.ghosts[i],sg);});
 }
 
@@ -1835,7 +1919,7 @@ function unpackSt(s){
 // ═══════════════════════════════════════════════════════════════
 function pickRole(role){
   const others=Object.values(lobbyP).filter(p=>p.id!==myId);
-  if(role==='pacman'&&others.filter(p=>p.role==='pacman').length>=2){toast('⚠ Máximo 2 Pac-Man',1500);return;}
+  if(role==='pacman'&&others.filter(p=>p.role==='pacman').length>=2){toast('⚠ Máximo 2 Pac-Caos',1500);return;}
   if(role==='ghost'&&others.filter(p=>p.role==='ghost').length>=8){toast('⚠ Máximo 8 fantasmas',1500);return;}
   myRole=role;
   document.querySelectorAll('.RC').forEach(c=>c.classList.remove('SEL'));
@@ -1892,7 +1976,7 @@ function shareLink(){
   const code=roomCode||$('codeShow').textContent;
   if(location.protocol==='file:'){toast('Sube el archivo a GitHub Pages para compartir enlace. Código: '+code,3500);return;}
   const url=roomLink();
-  if(navigator.share){navigator.share({title:'PAC-MAN CHAOS',text:'Únete a mi sala: '+code,url}).catch(()=>{});return;}
+  if(navigator.share){navigator.share({title:'PAC-CAOS',text:'Únete a mi sala: '+code,url}).catch(()=>{});return;}
   if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado ✓',1400),()=>toast(url,4000));
   else toast(url,4000);
 }
@@ -1936,6 +2020,7 @@ function toggleMute(){
 //  RESIZE
 // ═══════════════════════════════════════════════════════════════
 (function init(){
+  updLvlBtn();
   const b=document.body;
   b.classList.add(INPUT_MODE);
   if(HAS_TOUCH)b.classList.add('hastouch');
